@@ -38,6 +38,7 @@ export const AdminProductPage = () => {
               <td>${product.name}</td>
               <td>
                 <button data-id="${product.id}" class="btn btn-warning btn-remove">Xóa</button>
+                <a href="/admin/products/${product.id}/edit">Sửa</a>
               </td>
             </tr>
           `).join("")}

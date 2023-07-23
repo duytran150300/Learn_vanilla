@@ -3,10 +3,10 @@ import { router, useEffect } from "../../utilities";
 import { v4 as uuidv4 } from 'uuid';
 
 
-const AdminProductAddPage = () => {
+const AdminProductEditPage = ({id}) => {
   
   const products = JSON.parse(localStorage.getItem('products')) || [];
-
+    const currentProduct = products.find(product => product.id===id);
   useEffect(()=>{
     const form = document.querySelector("#form-add");
     const productName = document.querySelector("#product-name");
@@ -25,43 +25,45 @@ const AdminProductAddPage = () => {
     addBtn.onclick = (e)=>{
       e.preventDefault();
       const newProduct = {
-        id: uuidv4(),
+        id: id,
         name: productName.value,
         price: productPrice.value
       }
       console.log(newProduct);
-      // thêm vào trong mảng products
-      products.push(newProduct);
-
+      // update phần tử vào trong mảng products
+      const newProducts = products.map(product => {
+        return product.id === newProduct.id ? newProduct : product;
+      })
+      console.log(newProducts);
       // luu lai storage
-      localStorage.setItem('products', JSON.stringify(products));
+      localStorage.setItem('products', JSON.stringify(newProducts));
 
       //reirect sang trang admin/products
       router.navigate("/admin/products")
     }
-    
-
   });
+  if (!currentProduct) return null;
+    
   return (
     `<div class="container>
-      <h1>Thêm sản phẩm</h1>
+      <h1>Cập nhật sản phẩm</h1>
       <form action="" id="form-add">
         <div class="form-group mb-3">
-          <label for="">Thêm sản phẩm</label>
-          <input type="text" id="product-name" class="form-control">
+          <label for="">Cập nhật tên sản phẩm</label>
+          <input type="text" id="product-name" class="form-control" value = "${currentProduct.name}">
         </div>
 
         <div class="form-group mb-3">
-          <label for="">Giá sản phẩm</label>
-          <input type="text" id="product-price" class="form-control">
+          <label for="">Cập nhật Giá sản phẩm</label>
+          <input type="text" id="product-price" class="form-control" value = "${currentProduct.price}">
         </div>
 
         <div class="form-group">
-          <button class="btn btn-primary add-btn" type="submit">Thêm sản phẩm</button>
+          <button class="btn btn-primary add-btn" type="submit">Cập nhật sản phẩm</button>
         </div>
       </form>
     </div>`
     );
 };
 
-export default AdminProductAddPage;
+export default AdminProductEditPage;
